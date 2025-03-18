@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+</head>
+<body>
+    <h1>Password manager</h1>
+    <form action="/add_password" method="post">
+        <input type="text" name="username" placeholder="Username">
+        <input type="text" name="password" placeholder="Password">
+        <input type="text" name ="site" placeholder="Site">
+        <button type="submit">Add password</button>
+    </form>
+    <a href="/logout">Logout</a>
+    <ol>
+        {% for password in passwords %}
+            <li>
+                <ul>
+                    <li>Site : {{ password[3] }}</li>
+                    <li>Username : {{ password[1] }}</li>
+                    <li> Password : {{ password[2] }}</li>
+                </ul>
+            </li>
+            <br>
+        {% endfor %}
+        {% if not passwords %}
+            <li>No passwords</li>
+        {% endif %}
+    </ol>
+</body>
+</html>
