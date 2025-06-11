@@ -12,7 +12,7 @@ class PasswordShareHandler:
         query = "INSERT INTO password_share (site, username, password, valid_until, hash) VALUES (?, ?, ?, ?, ?)"
         params = (site, username, password, valid_until, hash)
         if user_id is not None:
-            self.logs_handler.add_log(user_id, site, "password_shared")
+            self.logs_handler.add_log(user_id, "Partage", "Partage de mot de passe")
         return self.db_handler.send_query(query, params)
     def get_shared_password(self, hash):
         query = f"SELECT * FROM password_share WHERE hash = '{hash}'"

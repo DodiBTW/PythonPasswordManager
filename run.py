@@ -24,7 +24,19 @@ def home():
     passwords = password_handler.get_passwords(user_id)
     if not passwords:
         passwords = []
-    return render_template('home.html', passwords=passwords)
+    fernet = Fernet(key)
+    passwords_dicts = []
+    for row in passwords:
+    # Adjust indices as per your DB schema
+        passwords_dicts.append({
+            'id': row[0],
+            'username': row[1],
+            'site': row[3],
+            'password': fernet.decrypt(row[2].encode()).decode()
+        })
+    logsmanager = logs_handler.LogsHandler()
+    logs = logsmanager.get_logs(user_id)
+    return render_template('home.html', passwords=passwords_dicts, logs=logs)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -182,17 +194,6 @@ def logout():
 
 def get_secret_key():
     return "SECRET_KEYXQKHJDSQOIUEZ"
-
-def get_logs(user_id):
-    token = request.cookies.get('token')
-    key = auth.get_key_from_token(token)
-    if not key:
-        return redirect("/login")
-    logs_handler_instance = logs_handler.LogsHandler()
-    if not auth.verify_token(token, user_id):
-        return redirect("/login")
-    logs = logs_handler_instance.get_logs(user_id)
-    return render_template('logs.html', logs=logs)
 
 if __name__ == "__main__":
     app.secret_key = get_secret_key()

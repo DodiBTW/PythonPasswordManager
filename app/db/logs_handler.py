@@ -2,10 +2,10 @@ from app.db.database_handler import DatabaseHandler
 from datetime import datetime
 
 class LogsHandler:
-    def __init__(self, ):
+    def __init__(self ):
         self.db_handler = DatabaseHandler()
     def get_logs(self, user_id):
-        query = f"SELECT * FROM logs WHERE user_id = {user_id}"
+        query = f"SELECT * FROM logs WHERE user_id = {user_id} ORDER BY date DESC"
         return self.db_handler.send_query(query)
     def get_log(self, user_id, log_id):
         query = f"SELECT * FROM logs WHERE user_id = {user_id} AND id = {log_id}"

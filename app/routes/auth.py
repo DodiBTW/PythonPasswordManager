@@ -7,12 +7,10 @@ from flask import Blueprint
 from app.db.user_handler import UserHandler
 from flask import redirect, url_for
 from app.db.passwords_handler import PasswordsHandler
-from app.db.logs_handler import LogsHandler
 from cryptography.fernet import Fernet
 import bcrypt
 
 user_handler = UserHandler()
-logs_handler = LogsHandler()
 
 auth_bp = Blueprint('auth', __name__)
 

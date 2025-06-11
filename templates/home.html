@@ -35,28 +35,28 @@
                 <button type="submit">Add Password</button>
             </form>
         </section>
+        
         <section class="password-list-section">
             <h2>Saved Passwords</h2>
             <ol class="password-list">
                 {% for password in passwords %}
                 <li>
                     <div class="password-card">
-                        <h1> {{ password[3] }}</h1>
-                        <div><strong>Username:</strong> {{ password[1] }}</div>
+                        <h1>{{ password.site }}</h1>
+                        <div><strong>Username:</strong> {{ password.username }}</div>
                         <div>
                             <strong>Password:</strong>
-                            <input type="password" readonly value="{{ password[2] }}" id="pw-{{ loop.index }}" style="margin-right:5px;">
+                            <input type="password" readonly value="{{ password.password }}" id="pw-{{ loop.index }}" style="margin-right:5px;">
                             <button type="button" onclick="togglePassword('pw-{{ loop.index }}', this)">Show</button>
                         </div>
-                        </script>
                         <form action="/delete_password" method="post" style="display:inline;">
-                            <input type="hidden" name="site" value="{{ password[3] }}">
+                            <input type="hidden" name="site" value="{{ password.site }}">
                             <button type="submit" class="delbutton">Supprimer le mot de passe</button>
                         </form>
                         <form action="/share_password" method="post">
-                            <input type="hidden" name="site" value="{{ password[3] }}">
-                            <input type="hidden" name="username" value="{{ password[1] }}">
-                            <input type="hidden" name="password" value="{{ password[2] }}">
+                            <input type="hidden" name="site" value="{{ password.site }}">
+                            <input type="hidden" name="username" value="{{ password.username }}">
+                            <input type="hidden" name="password" value="{{ password.password }}">
                             <button type="submit" class="sharebutton">Partager le mot de passe</button>
                         </form>
                     </div>
@@ -66,6 +66,22 @@
                 <li class="no-passwords">Pas de mots de passe</li>
                 {% endif %}
             </ol>
+        </section>
+        <section class="logs-section">
+            <h2>Logs</h2>
+            <ul class="logs-list">
+            {% for log in logs %}
+            <br>
+            <li>
+                <strong>Type:</strong> {{ log[0] }}<br>
+                <strong>Date:</strong> {{ log[2] }}<br>
+                <strong>Message:</strong> {{ log[3] }}<br>
+            </li>
+            {% endfor %}
+            {% if not logs %}
+            <li class="no-logs">Aucun log à afficher</li>
+            {% endif %}
+            </ul>
         </section>
     </div>
     <script>

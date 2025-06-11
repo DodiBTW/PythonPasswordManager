@@ -21,9 +21,9 @@ class UserHandler:
             encrypted_password = result[0][2]
             if not bcrypt.checkpw(password.encode(), encrypted_password.encode('utf-8')):
                 return False
-            self.logs_handler.add_log(user_id, 'Login', 'Logged in')
+            self.logs_handler.add_log(user_id, 'Login', 'Connexion réussie')
         else:
-            self.logs_handler.add_log(user_id, 'Login', 'Failed login')
+            self.logs_handler.add_log(user_id, 'Login', 'Connexion échouée')
         return result
     def get_user_id(self, username):
         query = f"SELECT id FROM users WHERE username = '{username}'"
