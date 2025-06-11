@@ -14,7 +14,10 @@ class DatabaseHandler:
                 result = cursor.fetchall()
             else:
                 conn.commit()
-                result = cursor.rowcount
+                if query.strip().upper().startswith("INSERT"):
+                    result = cursor.lastrowid
+                else:
+                    result = cursor.rowcount
         finally:
             cursor.close()
             conn.close()

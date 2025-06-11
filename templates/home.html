@@ -32,6 +32,12 @@
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="text" name="password" placeholder="Password" required>
                 <input type="text" name="site" placeholder="Site" required>
+                <select name="category">
+                    <option value="">No category</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat[1] }}">{{ cat[1] }}</option>
+                    {% endfor %}
+                </select>
                 <button type="submit">Add Password</button>
             </form>
         </section>
@@ -49,6 +55,15 @@
                             <input type="password" readonly value="{{ password.password }}" id="pw-{{ loop.index }}" style="margin-right:5px;">
                             <button type="button" onclick="togglePassword('pw-{{ loop.index }}', this)">Show</button>
                         </div>
+                        <strong>Categories:</strong>
+                        <div class="categories">
+                            {% for cat in password.categories %}
+                                <span class="category" style="background-color:#e0e7ff; color:#3730a3; border-radius:12px; padding:2px 10px; margin-right:5px; font-size:0.95em; display:inline-block;">
+                                    {{ cat[1] }}
+                                </span>
+                            {% endfor %}
+                        </div></span>
+                        <br>
                         <form action="/delete_password" method="post" style="display:inline;">
                             <input type="hidden" name="site" value="{{ password.site }}">
                             <button type="submit" class="delbutton">Supprimer le mot de passe</button>

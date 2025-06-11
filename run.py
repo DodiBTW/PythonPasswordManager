@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import random
 from app.db import logs_handler
 from app import password_importer
+from app.db.category_handler import CategoryHandler
 
 app = Flask(__name__)
 @app.route('/')
@@ -26,17 +27,21 @@ def home():
         passwords = []
     fernet = Fernet(key)
     passwords_dicts = []
+    category_manager = CategoryHandler()
     for row in passwords:
-    # Adjust indices as per your DB schema
+        id = row[0]
+        categories = category_manager.get_categories_for_password(password_id=id)
         passwords_dicts.append({
-            'id': row[0],
+            'id': id,
             'username': row[1],
             'site': row[3],
-            'password': fernet.decrypt(row[2].encode()).decode()
+            'password': fernet.decrypt(row[2].encode()).decode(),
+            'categories': categories
         })
     logsmanager = logs_handler.LogsHandler()
     logs = logsmanager.get_logs(user_id)
-    return render_template('home.html', passwords=passwords_dicts, logs=logs)
+    all_categories = category_manager.get_all_categories()
+    return render_template('home.html', passwords=passwords_dicts, logs=logs, categories=all_categories)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -69,7 +74,13 @@ def add_password():
     password = data['password']
     fernet = Fernet(key)
     encrypted_password = fernet.encrypt(password.encode()).decode()
-    password_handler.add_password(user_id, username, site, encrypted_password)
+    category_name = request.form.get('category')
+    password_id = password_handler.add_password(user_id, username, site, encrypted_password)
+    if category_name:
+        category_handler = CategoryHandler()
+        category_handler.add_category(category_name)
+        category_id = category_handler.get_category_by_name(category_name)
+        category_handler.assign_category_to_password(password_id, category_id)
     return redirect("/home")
 
 @app.route('/delete_password', methods=['POST'])
