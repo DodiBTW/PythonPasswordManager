@@ -24,3 +24,6 @@ class PasswordShareHandler:
                 return None
             return result[0]
         return None
+    def get_all_shared_passwords(self, hash):
+        query = "SELECT * FROM password_share WHERE hash = ?"
+        return self.db_handler.send_query(query, (hash,))

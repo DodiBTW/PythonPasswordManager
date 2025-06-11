@@ -9,6 +9,7 @@ import random
 from app.db import logs_handler
 from app import password_importer
 from app.db.category_handler import CategoryHandler
+from app.db import passwords_handler
 
 app = Flask(__name__)
 @app.route('/')
@@ -150,6 +151,68 @@ def get_shared_password():
     if not send_password:
         return redirect("/home")
     return render_template('shared_password_get.html', shared_password=send_password)
+
+@app.route('/share_category_passwords', methods=['POST'])
+def share_category_passwords():
+    token = request.cookies.get('token')
+    user_id = request.cookies.get('user_id')
+    key = auth.get_key_from_token(token)
+    if not key:
+        return redirect("/login")
+    if not auth.verify_token(token, user_id):
+        return redirect("/login")
+    category_name = request.form.get('category')
+    if not category_name:
+        return redirect("/home")
+    category_handler = CategoryHandler()
+    category_id = category_handler.get_category_by_name(category_name)
+    if not category_id:
+        return redirect("/home")
+    password_handler = PasswordsHandler(key)
+    query = """
+        SELECT p.id, p.site, p.username, p.password
+        FROM passwords p
+        JOIN passwords_categories pc ON p.id = pc.password_id
+        WHERE pc.category_id = ? AND p.user_id = ?
+    """
+    passwords = password_handler.db_handler.send_query(query, (category_id, user_id))
+    if not passwords:
+        return redirect("/home")
+    random_key = Fernet.generate_key()
+    fernet = Fernet(random_key)
+    hash = hex(random.getrandbits(128))[2:]
+    password_share_handler = PasswordShareHandler(key)
+    for row in passwords:
+        site = fernet.encrypt(row[1].encode()).decode()
+        username = fernet.encrypt(row[2].encode()).decode()
+        password = fernet.encrypt(row[3].encode()).decode()
+        password_share_handler.share_password(site, username, password, hash, datetime.now() + timedelta(minutes=45), user_id)
+    link = f"http://127.0.0.1:5000/get_shared_category_passwords?hash={hash}&key={random_key.decode()}"
+    return render_template('share_password.html', link=link)
+
+@app.route('/get_shared_category_passwords', methods=['GET'])
+def get_shared_category_passwords():
+    hash = request.args.get('hash')
+    decrypt_key = request.args.get('key')
+    if not hash or not decrypt_key:
+        return redirect("/home")
+    password_share_handler = PasswordShareHandler("")
+    shared_passwords = password_share_handler.get_all_shared_passwords(hash)
+    if not shared_passwords:
+        return redirect("/home")
+    fernet = Fernet(decrypt_key.encode())
+    passwords = []
+    for row in shared_passwords:
+        try:
+            print("Sharing row : " + str(row))
+            site = fernet.decrypt(row[0].encode()).decode()
+            username = fernet.decrypt(row[2].encode()).decode()
+            password =  fernet.decrypt(row[1].encode()).decode()
+            passwords.append({'site': site, 'username': username, 'password': password})
+        except Exception:
+            continue
+    print("our passwords: " ,  str(shared_passwords))
+    return render_template('shared_passwords_get.html', passwords=passwords)
 
 @app.route('/import_csv', methods=['POST'])
 def import_csv():

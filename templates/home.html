@@ -82,6 +82,14 @@
                 {% endif %}
             </ol>
         </section>
+        <form action="/share_category_passwords" method="post">
+            <select name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat[1] }}">{{ cat[1] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Share All Passwords in Category</button>
+        </form>
         <section class="logs-section">
             <h2>Logs</h2>
             <ul class="logs-list">
