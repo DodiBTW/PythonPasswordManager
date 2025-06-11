@@ -21,13 +21,13 @@ def register():
         data = request.form
         username = data['username']
         password = data['password']
-        key = Fernet.generate_key()  # This is already in bytes
-        crypted_key = bcrypt.hashpw(key, bcrypt.gensalt())  # Hash the raw bytes of the key
+        key = Fernet.generate_key()
+        crypted_key = bcrypt.hashpw(key, bcrypt.gensalt())
         if user_handler.user_exists(username):
             return make_response(jsonify({'message': 'User already exists'}), 400)
-        user_handler.register(username, password, crypted_key)
-        # Return the key to the user for storage
-        return render_template('register.html', key=key.decode())  # Decode key to display as a string
+        encrypted_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        user_handler.register(username, encrypted_password, crypted_key)
+        return render_template('register.html', key=key.decode())
     return render_template('register.html')
 auth_bp = Blueprint('auth', __name__)
 
@@ -38,6 +38,7 @@ def login():
     if not user_handler.user_exists(username):
         return make_response(jsonify({'message': 'Invalid credentials'}), 401)
     user_id = user_handler.get_user_id(username)
+    encrypted_password = user_handler.get_password(user_id)
     if not user_handler.login(user_id, password):
         return make_response(jsonify({'message': 'Invalid credentials'}), 401)
     key = data['key'].encode()

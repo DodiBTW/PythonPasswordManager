@@ -58,26 +58,25 @@
 <body>
     <h1>Register</h1>
     <form action="/register" method="post">
-        <label for="username">Username:</label>
+        <label for="username">Nom d'utilisateur :</label>
         <input type="text" id="username" name="username" required>
         <br>
-        <label for="password">Password:</label>
+        <label for="password">Mot de passe :</label>
         <input type="password" id="password" name="password" required>
         <br>
-        <button type="submit">Register</button>
+        <button type="submit">Inscription</button>
     </form>
     <a href="/login">Login</a>
-    <!-- Modal -->
     {% if key %}
     <div id="keyModal" class="modal" style="display: block;">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Registration Successful!</h2>
+            <h2>Inscription réussie!</h2>
             <p>Your key is:</p>
             <p id="key" style="font-weight: bold;">{{ key }}</p>
-            <p>Please store this key securely, it will not be shown to you again.</p>
+            <p>Veuillez stocker cette clé de façon sécurisée. Elle sera montrée une seule fois.</p>
             <button onclick="copyKey()">Copy Key</button>
-            <a href="/login"><button>Go to Login</button></a>
+            <a href="/login"><button>Login</button></a>
         </div>
     </div>
     {% endif %}

@@ -61,6 +61,12 @@ L'application sera accessible à l'adresse [http://127.0.0.1:5000](http://127.0.
 5. **Déconnexion :**
     - Cliquez sur "Déconnexion" pour fermer votre session.
 
+## Imports fichiers
+### Import csv
+Pour importer un fichier csv, veuillez avoir un fichier ayant les colonnes site, username et password en première ligne puis leurs données en dessous.
+### Import json
+
+
 ## Remarques
 
 - **Sécurité :** Les mots de passe sont chiffrés avant d'être stockés dans la base de données.

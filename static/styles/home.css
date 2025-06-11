@@ -1,0 +1,103 @@
+body {
+    background: #f4f6fb;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 24px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #2d3a4b;
+}
+
+.logout-btn {
+    background: #e73ca0;
+    color: #fff;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background: #f24875;
+}
+
+.add-password-section {
+    margin-bottom: 32px;
+}
+
+.add-password-form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.add-password-form input {
+    flex: 1 1 120px;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.add-password-form button {
+    background: #34b511;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.add-password-form button:hover {
+    background: #21bb47;
+}
+
+.password-list-section h2 {
+    margin-top: 0;
+    color: #2d3a4b;
+    font-size: 1.2rem;
+}
+
+.password-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.password-card {
+    background: #f9fafc;
+    border: 1px solid #e1e4ea;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.no-passwords {
+    color: #888;
+    text-align: center;
+    margin-top: 16px;
+}

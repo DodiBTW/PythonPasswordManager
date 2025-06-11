@@ -1,0 +1,17 @@
+[
+    {
+        "site": "json1.com",
+        "username": "user1",
+        "password": "pass1"
+    },
+    {
+        "site": "json2.com",
+        "username": "user2",
+        "password": "pass2"
+    },
+    {
+        "site": "json3.com",
+        "username": "user3",
+        "password": "pass3"
+    }
+]
